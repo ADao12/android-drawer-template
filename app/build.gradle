@@ -1,0 +1,73 @@
+buildscript {
+    //ext.kotlinVersion = '0.11.91'
+    ext.kotlinVersion = '0.1-SNAPSHOT'
+
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+
+    dependencies {
+        // Kotlin required plugin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlinVersion"
+
+        // Dagger 2 required plugin
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: "kotlin-android"
+apply plugin: 'com.neenbedankt.android-apt'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:recyclerview-v7:21.0.3'
+
+    //kotlin dependency
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+    //Dagger 2 dependencies
+    compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
+    apt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    // RxKotlin
+    //compile 'io.reactivex:rxkotlin:0.21.0'
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.michalfaber.drawertemplate"
+        minSdkVersion 14
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+}

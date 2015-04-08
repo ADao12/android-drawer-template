@@ -1,0 +1,21 @@
+<resources>
+    <!--
+        Check Android Theme colors for color reference:
+        https://developer.android.com/training/material/images/ThemeColors.png
+
+        Refer also to Color palette for the UI colors you should use:
+        http://www.google.com/design/spec/style/color.html#color-ui-color-palette
+    -->
+    <color name="primary">#2196F3</color>
+    <color name="primary_dark">#1976D2</color>
+    <color name="window_background">#FFF</color>
+    <color name="text_primary">#212121</color>
+    <color name="navigation_bar">#000</color>
+    <color name="accent">#FF4081</color>
+
+    <color name="selected_gray">#ffdbdbdb</color>
+    <color name="drawer_toggle">#ffffff</color>
+    <color name="drawer_background">#000</color>
+    <color name="drawer_section_color">#cccccc</color>
+    <color name="drawer_label_color">#ffffff</color>
+</resources>
