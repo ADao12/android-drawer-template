@@ -15,7 +15,7 @@
 
     <color name="selected_gray">#ffdbdbdb</color>
     <color name="drawer_toggle">#ffffff</color>
-    <color name="drawer_background">#000</color>
-    <color name="drawer_section_color">#cccccc</color>
-    <color name="drawer_label_color">#ffffff</color>
+    <color name="drawer_background">#fff</color>
+    <color name="drawer_section_color">#ccc</color>
+    <color name="drawer_label_color">#000</color>
 </resources>
