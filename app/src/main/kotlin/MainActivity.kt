@@ -20,13 +20,13 @@ import android.widget.Toast
 import com.michalfaber.drawertemplate.fragments.DrawerFragment
 
 import kotlinx.android.synthetic.activity_main.*
-import javax.inject.Inject
+//import javax.inject.Inject
 import kotlin.properties.Delegates
 
 public class MainActivity : ActionBarActivity(), DrawerFragment.NavigationDrawerListener {
 
     var preferences: SharedPreferences? = null
-        [Inject] set
+  //      [Inject] set
 
     var actionBarDrawerToggle: ActionBarDrawerToggle? = null
 
@@ -43,7 +43,7 @@ public class MainActivity : ActionBarActivity(), DrawerFragment.NavigationDrawer
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar_actionbar)
 
-        MainApplication.graph.inject(this)
+        //MainApplication.graph.inject(this)
 
         actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawer, toolbar_actionbar, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerClosed(drawerView: View) {
