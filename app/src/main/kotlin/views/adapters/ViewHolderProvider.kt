@@ -8,6 +8,7 @@ class  ViewHolderProvider {
     val viewHolderFactories  = hashMapOf<Int, Any>()
 
     fun provideViewHolder(drawerItemView: View, viewType: Int) : RecyclerView.ViewHolder {
+        [suppress("UNCHECKED_CAST")]
         val viewHolderFactory = viewHolderFactories.get(viewType) as (View) -> RecyclerView.ViewHolder
         return viewHolderFactory(drawerItemView)
     }

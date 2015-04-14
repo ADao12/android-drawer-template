@@ -12,7 +12,10 @@ abstract class AdapterItemBase<T>(val viewHolderClass: KClass<T>): AdapterItem {
     override val viewType: Int = viewHolderClass.hashCode()
 
     abstract fun bindViewHolder(viewHolder: T)
+
+    [suppress("UNCHECKED_CAST")]
     override fun bindViewHolder(viewHolder: RecyclerView.ViewHolder) {
         bindViewHolder(viewHolder as T)
     }
+
 }

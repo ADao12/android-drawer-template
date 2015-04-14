@@ -69,14 +69,11 @@ class DrawerItemSpinner(val subs: List<DrawerItemSpinner.DrawerItemSpinnerSubIte
         override fun bindViewHolder(viewHolder: ViewHolderSpinnerSubItem) {
             viewHolder.label.setText(label)
             viewHolder.itemView.setOnClickListener {
-                if (parentSpinner != null) {
-                    val parentIdx = viewHolder.supervisor.indexOfItem(parentSpinner!!)
-                    val currPos = viewHolder.getAdapterPosition()
-                    val thisIndex = currPos - parentIdx - 1
-
-                    viewHolder.supervisor.swapItem(parentIdx, parentSpinner!!.makeCurrent(thisIndex))
-                    viewHolder.supervisor.removeItems(parentIdx + 1, parentSpinner!!.subItems)
-                }
+                val parentIdx = viewHolder.supervisor.indexOfItem(parentSpinner)
+                val currPos = viewHolder.getAdapterPosition()
+                val thisIndex = currPos - parentIdx - 1
+                viewHolder.supervisor.swapItem(parentIdx, parentSpinner.makeCurrent(thisIndex))
+                viewHolder.supervisor.removeItems(parentIdx + 1, parentSpinner.subItems)
                 onClick(id)
             }
         }
