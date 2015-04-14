@@ -20,49 +20,33 @@ import kotlin.properties.Delegates
 import kotlin.reflect
 import kotlin.reflect.KClass
 
+class DrawerItemSimple(override val id: Long, val icon: Drawable, val label: String, val onClick: (Long) -> Unit) : AdapterItemBase<ViewHolderSimple>(ViewHolderSimple::class){
+    override val isSelectable: Boolean = true
 
-class DrawerItemSimple(val icon: Drawable, val label: String, val onClick: () -> Unit) : AdapterItemBase<ViewHolderSimple>(ViewHolderSimple::class){
     override fun bindViewHolder(viewHolder: ViewHolderSimple) {
         viewHolder.icon.setImageDrawable(icon)
         viewHolder.label.setText(label)
-        viewHolder.itemView.setOnClickListener { onClick() }
+        viewHolder.itemView.setOnClickListener { onClick(id) }
     }
 }
 
 class DrawerItemHeader(val label: String) : AdapterItemBase<ViewHolderSection>(ViewHolderSection::class){
+    override val isSelectable: Boolean = false
+
     override fun bindViewHolder(viewHolder: ViewHolderSection) {
         viewHolder.label.setText(label)
     }
 }
 
 class DrawerItemSpinner(val subs: List<DrawerItemSpinner.DrawerItemSpinnerSubItem>, val currentItem: Int)  : AdapterItemBase<ViewHolderSpinnerItem>(ViewHolderSpinnerItem::class){
+    private val subItems = subs.map { AdapterItemSpinnerSubItemInternal(it.id, this, it.icon, it.label, it.onClick) }
+    private var expanded = false
 
-    val subItems = subs.map { AdapterItemSpinnerSubItemInternal(this, it.icon, it.label, it.onClick) }
-
-    public data class DrawerItemSpinnerSubItem(val icon: Drawable, val label: String, val onClick: () -> Unit)
-
-    private class AdapterItemSpinnerSubItemInternal(val parentSpinner: DrawerItemSpinner, val icon: Drawable, val label: String, val onClick: () -> Unit) : AdapterItemBase<ViewHolderSpinnerSubItem>(ViewHolderSpinnerSubItem::class){
-        override fun bindViewHolder(viewHolder: ViewHolderSpinnerSubItem) {
-            viewHolder.label.setText(label)
-            viewHolder.itemView.setOnClickListener {
-                if (parentSpinner != null) {
-                    val parentIdx = viewHolder.supervisor.indexOfItem(parentSpinner!!)
-                    val currPos = viewHolder.getAdapterPosition()
-                    val thisIndex = currPos - parentIdx - 1
-
-                    viewHolder.supervisor.swapItem(parentIdx, parentSpinner!!.makeCurrent(thisIndex))
-                    viewHolder.supervisor.removeItems(parentIdx + 1, parentSpinner!!.subItems)
-                }
-                onClick()
-            }
-        }
-    }
-
-    var expanded = false
-
-    fun makeCurrent(currentItem: Int): DrawerItemSpinner {
+    private fun makeCurrent(currentItem: Int): DrawerItemSpinner {
         return DrawerItemSpinner(subs, currentItem)
     }
+
+    override val isSelectable: Boolean = false
 
     override fun bindViewHolder(viewHolder: ViewHolderSpinnerItem) {
         viewHolder.label.setText(subItems[currentItem].label)
@@ -79,5 +63,24 @@ class DrawerItemSpinner(val subs: List<DrawerItemSpinner.DrawerItemSpinnerSubIte
             expanded = !expanded
         })
     }
-}
 
+    private class AdapterItemSpinnerSubItemInternal(override val id: Long, val parentSpinner: DrawerItemSpinner, val icon: Drawable, val label: String, val onClick: (Long) -> Unit) : AdapterItemBase<ViewHolderSpinnerSubItem>(ViewHolderSpinnerSubItem::class){
+        override val isSelectable: Boolean = false
+        override fun bindViewHolder(viewHolder: ViewHolderSpinnerSubItem) {
+            viewHolder.label.setText(label)
+            viewHolder.itemView.setOnClickListener {
+                if (parentSpinner != null) {
+                    val parentIdx = viewHolder.supervisor.indexOfItem(parentSpinner!!)
+                    val currPos = viewHolder.getAdapterPosition()
+                    val thisIndex = currPos - parentIdx - 1
+
+                    viewHolder.supervisor.swapItem(parentIdx, parentSpinner!!.makeCurrent(thisIndex))
+                    viewHolder.supervisor.removeItems(parentIdx + 1, parentSpinner!!.subItems)
+                }
+                onClick(id)
+            }
+        }
+    }
+
+    public data class DrawerItemSpinnerSubItem(val id: Long, val icon: Drawable, val label: String, val onClick: (Long) -> Unit)
+}

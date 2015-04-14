@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.activity_main.*
 //import javax.inject.Inject
 import kotlin.properties.Delegates
 
-public class MainActivity : ActionBarActivity(), DrawerFragment.NavigationDrawerListener {
+public class MainActivity : ActionBarActivity(), DrawerFragment.DrawerListener {
 
     var preferences: SharedPreferences? = null
   //      [Inject] set
@@ -62,8 +62,8 @@ public class MainActivity : ActionBarActivity(), DrawerFragment.NavigationDrawer
         drawer.setDrawerListener(actionBarDrawerToggle)
     }
 
-    override public fun onNavigationDrawerItemSelected(position: Int) {
-        Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show()
+    override public fun onDrawerItemSelected(id: Long) {
+        Toast.makeText(this, "Menu item selected id:${id}", Toast.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {
