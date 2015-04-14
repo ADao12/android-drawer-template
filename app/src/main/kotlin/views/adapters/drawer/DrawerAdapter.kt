@@ -19,10 +19,11 @@ import kotlin.properties.Delegates
 import kotlin.reflect.KClass
 
 public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), AdapterItemsSupervisor<AdapterItem> {
+    private val items: MutableList<AdapterItem> = adapterItems.toCollection(arrayListOf<AdapterItem>())
 
-    val items: MutableList<AdapterItem> = adapterItems.toCollection(arrayListOf<AdapterItem>())
+    private val viewHolderProvider = ViewHolderProvider()
 
-    val viewHolderProvider = ViewHolderProvider()
+    private var selectedItem: AdapterItem? = null
 
     init {
         viewHolderProvider.registerViewHolderFactory(ViewHolderSimple::class, { viewType ->
@@ -37,6 +38,33 @@ public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.
         viewHolderProvider.registerViewHolderFactory(ViewHolderSpinnerSubItem::class, { viewType ->
             ViewHolderSpinnerSubItem(viewType, this)
         })
+    }
+
+    public fun getAdapterItemAt(adapterPosition: Int) : AdapterItem {
+        if (adapterPosition >=0 && adapterPosition < items.size()) {
+            return items[adapterPosition]
+        } else {
+            throw IllegalArgumentException()
+        }
+    }
+
+    public fun select(adapterItem: AdapterItem) {
+        if (adapterItem.isSelectable == true && adapterItem != selectedItem) {
+            unselectPreviousAdapterItem()
+            selectAdapterItem(adapterItem)
+        }
+    }
+
+    private fun selectAdapterItem(adapterItem: AdapterItem) {
+        selectedItem = adapterItem
+        notifyItemChanged(indexOfItem(selectedItem!!));
+    }
+
+    private fun unselectPreviousAdapterItem() {
+        val prevItemIndex: Int = if (selectedItem != null) indexOfItem(selectedItem!!) else -1
+        if (prevItemIndex >= 0) {
+            notifyItemChanged(prevItemIndex);
+        }
     }
 
     override fun removeItems(startsFrom: Int, subItems: List<AdapterItem>) {
@@ -73,5 +101,10 @@ public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         items[position].bindViewHolder(viewHolder)
+        viewHolder.itemView.setActivated(items[position] == selectedItem)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return items[position].id
     }
 }
