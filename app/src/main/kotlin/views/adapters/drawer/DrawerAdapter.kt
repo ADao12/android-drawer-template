@@ -9,33 +9,37 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.michalfaber.drawertemplate.MainApplication
 import com.michalfaber.drawertemplate.R
 import com.michalfaber.drawertemplate.views.adapters.AdapterItem
 import com.michalfaber.drawertemplate.views.adapters.AdapterItemsSupervisor
 import com.michalfaber.drawertemplate.views.adapters.ViewHolderProvider
 import java.util.ArrayList
 import java.util.HashMap
+import javax.inject.Inject
 import kotlin.properties.Delegates
 import kotlin.reflect.KClass
 
 public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), AdapterItemsSupervisor<AdapterItem> {
     private val items: MutableList<AdapterItem> = adapterItems.toCollection(arrayListOf<AdapterItem>())
-
-    private val viewHolderProvider = ViewHolderProvider()
-
     private var selectedItem: AdapterItem? = null
 
+    var viewHolderProvider: ViewHolderProvider? = null
+        [Inject] set
+
     init {
-        viewHolderProvider.registerViewHolderFactory(ViewHolderSimple::class, { viewType ->
+        MainApplication.graph.inject(this)
+
+        viewHolderProvider!!.registerViewHolderFactory(ViewHolderSimple::class, { viewType ->
             ViewHolderSimple(viewType)
         })
-        viewHolderProvider.registerViewHolderFactory(ViewHolderSection::class, { viewType ->
+        viewHolderProvider!!.registerViewHolderFactory(ViewHolderSection::class, { viewType ->
             ViewHolderSection(viewType)
         })
-        viewHolderProvider.registerViewHolderFactory(ViewHolderSpinnerItem::class, { viewType ->
+        viewHolderProvider!!.registerViewHolderFactory(ViewHolderSpinnerItem::class, { viewType ->
             ViewHolderSpinnerItem(viewType, this)
         })
-        viewHolderProvider.registerViewHolderFactory(ViewHolderSpinnerSubItem::class, { viewType ->
+        viewHolderProvider!!.registerViewHolderFactory(ViewHolderSpinnerSubItem::class, { viewType ->
             ViewHolderSpinnerSubItem(viewType, this)
         })
     }
@@ -96,7 +100,7 @@ public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder? {
         val v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.drawer_row, viewGroup, false)
-        return viewHolderProvider.provideViewHolder(v, viewType)
+        return viewHolderProvider!!.provideViewHolder(v, viewType)
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
