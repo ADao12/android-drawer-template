@@ -31,9 +31,11 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     //Dagger 2 dependencies
-    //compile 'com.google.dagger:dagger:2.0'
-    apt 'com.google.dagger:dagger-compiler:2.0'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile ('com.google.dagger:dagger:2.0') {
+        exclude module: 'javax.inject'
+    }
+    apt ('com.google.dagger:dagger-compiler:2.0')
+    provided 'javax.annotation:jsr250-api:1.0'
 
     // RxKotlin
     //compile 'io.reactivex:rxkotlin:0.21.0'

@@ -1,7 +1,7 @@
 package com.michalfaber.drawertemplate
 
 import android.location.LocationManager
-//import javax.inject.Inject
+import javax.inject.Inject
 import kotlin.platform.platformStatic
 import kotlin.properties.Delegates
 
@@ -14,7 +14,7 @@ public class MainApplication : BaseApplication() {
 
     override fun onCreate() {
         super<BaseApplication>.onCreate()
-//        graph = createApplicationComponent()
-  //      graph.inject(this)
+        graph = createApplicationComponent()
+        graph.inject(this)
     }
 }

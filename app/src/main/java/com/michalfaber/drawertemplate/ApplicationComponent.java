@@ -1,13 +1,17 @@
 package com.michalfaber.drawertemplate;
 
-//import javax.inject.Singleton;
+import com.michalfaber.drawertemplate.views.adapters.drawer.DrawerAdapter;
 
-//import dagger.Component;
+import javax.inject.Singleton;
 
-//@Singleton
-//@Component(modules = AndroidModule.class)
+import dagger.Component;
+
+@Singleton
+@Component(modules = AndroidModule.class)
 public interface ApplicationComponent {
     void inject(MainApplication application);
 
     void inject(MainActivity mainActivity);
+
+    void inject(DrawerAdapter drawerAdapter);
 }
