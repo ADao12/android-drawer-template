@@ -6,4 +6,16 @@
 
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
+
+    <dimen name="drawer_item_height_medium">48dp</dimen>
+    <dimen name="drawer_item_height_small">24dp</dimen>
+    <dimen name="drawer_item_image_medium">40dp</dimen>
+    <dimen name="drawer_item_image_small">18dp</dimen>
+    <dimen name="drawer_selection_marker_width_medium">8dp</dimen>
+    <dimen name="drawer_selection_marker_width_small">4dp</dimen>
+    <dimen name="drawer_separator">20dp</dimen>
+    <dimen name="drawer_item_margin">8dp</dimen>
+
+    <dimen name="medium_text_size">14sp</dimen>
+    <dimen name="small_text_size">8sp</dimen>
 </resources>

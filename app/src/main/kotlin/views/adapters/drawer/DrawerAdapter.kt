@@ -30,17 +30,28 @@ public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.
     init {
         MainApplication.graph.inject(this)
 
-        viewHolderProvider!!.registerViewHolderFactory(ViewHolderSimple::class, { viewType ->
-            ViewHolderSimple(viewType)
+        viewHolderProvider!!.registerViewHolderFactory(ViewHolderMedium::class, R.layout.drawer_item_medium, { drawerItemView ->
+            ViewHolderMedium(drawerItemView)
         })
-        viewHolderProvider!!.registerViewHolderFactory(ViewHolderSection::class, { viewType ->
-            ViewHolderSection(viewType)
+
+        viewHolderProvider!!.registerViewHolderFactory(ViewHolderSmall::class, R.layout.drawer_item_small, { drawerItemView ->
+            ViewHolderSmall(drawerItemView)
         })
-        viewHolderProvider!!.registerViewHolderFactory(ViewHolderSpinnerItem::class, { viewType ->
-            ViewHolderSpinnerItem(viewType, this)
+
+        viewHolderProvider!!.registerViewHolderFactory(ViewHolderSeparator::class, R.layout.drawer_item_separator, { drawerItemView ->
+            ViewHolderSeparator(drawerItemView)
         })
-        viewHolderProvider!!.registerViewHolderFactory(ViewHolderSpinnerSubItem::class, { viewType ->
-            ViewHolderSpinnerSubItem(viewType, this)
+
+        viewHolderProvider!!.registerViewHolderFactory(ViewHolderHeader::class, R.layout.drawer_item_header, { drawerItemView ->
+            ViewHolderHeader(drawerItemView)
+        })
+
+        viewHolderProvider!!.registerViewHolderFactory(ViewHolderSpinner::class, R.layout.drawer_item_spinner, { drawerItemView ->
+            ViewHolderSpinner(drawerItemView, this)
+        })
+
+        viewHolderProvider!!.registerViewHolderFactory(ViewHolderSpinnerItem::class, R.layout.drawer_item_spinner_item, { drawerItemView ->
+            ViewHolderSpinnerItem(drawerItemView, this)
         })
     }
 
@@ -53,7 +64,7 @@ public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.
     }
 
     public fun select(adapterItem: AdapterItem) {
-        if (adapterItem.isSelectable == true && adapterItem != selectedItem) {
+        if (adapterItem.selectable == true && adapterItem != selectedItem) {
             unselectPreviousAdapterItem()
             selectAdapterItem(adapterItem)
         }
@@ -99,8 +110,7 @@ public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder? {
-        val v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.drawer_row, viewGroup, false)
-        return viewHolderProvider!!.provideViewHolder(v, viewType)
+        return viewHolderProvider!!.provideViewHolder(viewGroup, viewType)
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {

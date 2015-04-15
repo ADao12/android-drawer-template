@@ -6,16 +6,19 @@
         Refer also to Color palette for the UI colors you should use:
         http://www.google.com/design/spec/style/color.html#color-ui-color-palette
     -->
-    <color name="primary">#2196F3</color>
-    <color name="primary_dark">#1976D2</color>
-    <color name="window_background">#FFF</color>
+    <color name="primary">#d5d5d5</color>
+    <color name="primary_dark">#6d6d6d</color>
+    <color name="window_background">#6d6d6d</color>
     <color name="text_primary">#212121</color>
-    <color name="navigation_bar">#000</color>
-    <color name="accent">#FF4081</color>
+    <color name="navigation_bar">#6d6d6d</color>
+    <color name="accent">#565aff</color>
 
-    <color name="selected_gray">#ffdbdbdb</color>
-    <color name="drawer_toggle">#ffffff</color>
-    <color name="drawer_background">#fff</color>
+    <color name="black">#000</color>
+
+    <color name="drawer_item_active">#565aff</color>
+    <color name="drawer_item_pressed">#312e2e</color>
+    <color name="drawer_item_label_color">#000</color>
+
     <color name="drawer_section_color">#ccc</color>
-    <color name="drawer_label_color">#000</color>
+
 </resources>
