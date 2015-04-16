@@ -131,7 +131,10 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
             val adapterPosition = menu_items.getChildAdapterPosition(view);
 
             // set this item as selected
-            drawerAdapter?.select(drawerAdapter!!.getItemIdAt(adapterPosition));
+            val id = drawerAdapter?.getItemIdAt(adapterPosition)
+            if (id != null) {
+                drawerAdapter?.select(id);
+            }
 
             return super.onSingleTapConfirmed(e);
         }

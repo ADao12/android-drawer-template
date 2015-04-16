@@ -53,12 +53,8 @@ public class DrawerAdapter(val adapterItems: List<AdapterItem>) : RecyclerView.A
         })
     }
 
-    public fun getItemIdAt(adapterPosition: Int): Long {
-        if (adapterPosition >= 0 && adapterPosition < items.size()) {
-            return items[adapterPosition].id
-        } else {
-            throw IllegalArgumentException()
-        }
+    public fun getItemIdAt(adapterPosition: Int): Long? {
+        return if (adapterPosition >= 0 && adapterPosition < items.size()) items[adapterPosition].id else null
     }
 
     public fun select(id: Long) {
