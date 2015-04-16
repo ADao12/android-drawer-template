@@ -22,7 +22,7 @@ import kotlin.reflect.KClass
 
 public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), AdapterItemsSupervisor<AdapterItem> {
     private val items: MutableList<AdapterItem> = adapterItems.toCollection(arrayListOf<AdapterItem>())
-    private var selectedItem: AdapterItem? = null
+    private var selectedId: Long? = null
 
     var viewHolderProvider: ViewHolderProvider? = null
         [Inject] set
@@ -55,30 +55,34 @@ public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.
         })
     }
 
-    public fun getAdapterItemAt(adapterPosition: Int) : AdapterItem {
+    public fun getItemIdAt(adapterPosition: Int) : Long {
         if (adapterPosition >=0 && adapterPosition < items.size()) {
-            return items[adapterPosition]
+            return items[adapterPosition].id
         } else {
             throw IllegalArgumentException()
         }
     }
 
-    public fun select(adapterItem: AdapterItem) {
-        if (adapterItem.selectable == true && adapterItem != selectedItem) {
-            unselectPreviousAdapterItem()
-            selectAdapterItem(adapterItem)
+    public fun select(id: Long) {
+        if (id != selectedId) {
+            items.filter { it.id == id && it.selectable == true }
+                    .take(1)
+                    .forEach {
+                        unselectPreviousAdapterItem()
+                        selectAdapterItem(it)
+                    }
         }
     }
 
     private fun selectAdapterItem(adapterItem: AdapterItem) {
-        selectedItem = adapterItem
-        notifyItemChanged(indexOfItem(selectedItem!!));
+        selectedId = adapterItem.id
+        notifyItemChanged(indexOfItem(adapterItem));
     }
 
     private fun unselectPreviousAdapterItem() {
-        val prevItemIndex: Int = if (selectedItem != null) indexOfItem(selectedItem!!) else -1
-        if (prevItemIndex >= 0) {
-            notifyItemChanged(prevItemIndex);
+        val prevSelectedItemIdx = items.indexOfFirst { it.id == selectedId }
+        if (prevSelectedItemIdx >= 0) {
+            notifyItemChanged(prevSelectedItemIdx);
         }
     }
 
@@ -115,7 +119,7 @@ public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         items[position].bindViewHolder(viewHolder)
-        viewHolder.itemView.setActivated(items[position] == selectedItem)
+        viewHolder.itemView.setActivated(items[position].id == selectedId)
     }
 
     override fun getItemId(position: Int): Long {

@@ -59,7 +59,10 @@ public class MainActivity : ActionBarActivity(), DrawerFragment.DrawerListener {
     }
 
     override public fun onDrawerItemSelected(id: Long) {
-        Toast.makeText(this, "Menu item selected id:${id}", Toast.LENGTH_SHORT).show()
+        when (id) {
+            DrawerFragment.ID_ABOUT -> Toast.makeText(this, "About", Toast.LENGTH_SHORT).show()
+            else -> Toast.makeText(this, "Menu item selected id:${id}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onBackPressed() {

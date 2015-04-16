@@ -39,20 +39,22 @@ class DrawerItemHeader(val label: String) : AdapterItemBase<ViewHolderHeader>(Vi
     }
 }
 
-class DrawerItemSpinner(val iconExpand: Drawable, val iconCollapse: Drawable, val subs: List<DrawerItemSpinner.Item>, val currentItem: Int = 0) : AdapterItemBase<ViewHolderSpinner>(ViewHolderSpinner::class) {
+class DrawerItemSpinner(val iconExpand: Drawable, val iconCollapse: Drawable, val subs: List<DrawerItemSpinner.Item>, val selectedId: Long?) : AdapterItemBase<ViewHolderSpinner>(ViewHolderSpinner::class) {
     private val subItems = subs.map { ItemInternal(it.id, this, it.icon, it.label, it.onClick) }
     private var expanded = false
 
-    private fun makeCurrent(currentItem: Int): DrawerItemSpinner {
-        return DrawerItemSpinner(iconExpand, iconCollapse, subs, currentItem)
+    private fun select(id: Long): DrawerItemSpinner {
+        return DrawerItemSpinner(iconExpand, iconCollapse, subs, id)
     }
 
     override val selectable: Boolean = false
 
     override fun bindViewHolder(viewHolder: ViewHolderSpinner) {
-        if (currentItem >= 0 && currentItem < subItems.size()) {
-            viewHolder.icon.setImageDrawable(subItems[currentItem].icon)
-            viewHolder.label.setText(subItems[currentItem].label)
+        subItems.filter { it.id == selectedId }
+                .take(1)
+                .forEach {
+            viewHolder.icon.setImageDrawable(it.icon)
+            viewHolder.label.setText(it.label)
         }
 
         viewHolder.itemView.setOnClickListener({
@@ -80,9 +82,7 @@ class DrawerItemSpinner(val iconExpand: Drawable, val iconCollapse: Drawable, va
             viewHolder.label.setText(label)
             viewHolder.itemView.setOnClickListener {
                 val parentIdx = viewHolder.supervisor.indexOfItem(parentSpinner)
-                val currPos = viewHolder.getAdapterPosition()
-                val thisIndex = currPos - parentIdx - 1
-                viewHolder.supervisor.swapItem(parentIdx, parentSpinner.makeCurrent(thisIndex))
+                viewHolder.supervisor.swapItem(parentIdx, parentSpinner.select(id))
                 viewHolder.supervisor.removeItems(parentIdx + 1, parentSpinner.subItems)
 
                 onClick(id)

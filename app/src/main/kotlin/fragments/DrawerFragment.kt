@@ -22,12 +22,42 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
     private var drawerAdapter: DrawerAdapter? = null
     private var items: List<AdapterItem>? = null
 
-    private val handleItemSelected: (Long) -> Unit = { id ->
+    private var selectedId: Long = ID_HOME
+    private var selectedCloudId: Long = ID_DROPBOX
+    private var selectedMapId: Long = ID_GOOGLEMAPS
+
+    private val handleSelected: (Long) -> Unit = { id ->
+        selectedId = id
+        listener?.onDrawerItemSelected(id)
+    }
+    private val handleSelectedCloud: (Long) -> Unit = { id ->
+        selectedCloudId = id
+        listener?.onDrawerItemSelected(id)
+    }
+
+    private val handleSelectedMap: (Long) -> Unit = { id ->
+        selectedMapId = id
         listener?.onDrawerItemSelected(id)
     }
 
     trait DrawerListener {
         public fun onDrawerItemSelected(id: Long)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putLong(STATE_SELECTED_ID, selectedId);
+        outState.putLong(STATE_SELECTED_CLOUD_ID, selectedCloudId);
+        outState.putLong(STATE_SELECTED_MAP_ID, selectedMapId);
+        super<Fragment>.onSaveInstanceState(outState)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super<Fragment>.onCreate(savedInstanceState)
+        if (savedInstanceState != null) {
+            selectedId = savedInstanceState.getLong(STATE_SELECTED_ID);
+            selectedCloudId = savedInstanceState.getLong(STATE_SELECTED_CLOUD_ID);
+            selectedMapId = savedInstanceState.getLong(STATE_SELECTED_MAP_ID);
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -45,7 +75,7 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
         menu_items.setHasFixedSize(true)
         menu_items.setAdapter(drawerAdapter)
         menu_items.addOnItemTouchListener(this)
-        drawerAdapter?.select(items!![0])
+        drawerAdapter?.select(selectedId)
         gestureDetector = GestureDetectorCompat(getActivity(), DrawerRecyclerViewOnGestureListener());
     }
 
@@ -60,31 +90,30 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
         val items: ArrayList<AdapterItem> = arrayListOf(
                 DrawerItemHeader("Cloud"),
                 DrawerItemSpinner(iconExpand, iconCollapse, arrayListOf(
-                        DrawerItemSpinner.Item(ID_DROPBOX, img(R.drawable.ic_menu_dropbox), "Dropbox", handleItemSelected),
-                        DrawerItemSpinner.Item(ID_BOX, img(R.drawable.ic_menu_box), "Box", handleItemSelected),
-                        DrawerItemSpinner.Item(ID_ONEDRIVE, img(R.drawable.ic_menu_onedrive), "One Drive", handleItemSelected),
-                        DrawerItemSpinner.Item(ID_GOOGLEDRIVE, img(R.drawable.ic_menu_googledrive), "Google Drive", handleItemSelected)
-                )),
+                        DrawerItemSpinner.Item(ID_DROPBOX, img(R.drawable.ic_menu_dropbox), "Dropbox", handleSelectedCloud),
+                        DrawerItemSpinner.Item(ID_BOX, img(R.drawable.ic_menu_box), "Box", handleSelectedCloud),
+                        DrawerItemSpinner.Item(ID_ONEDRIVE, img(R.drawable.ic_menu_onedrive), "One Drive", handleSelectedCloud),
+                        DrawerItemSpinner.Item(ID_GOOGLEDRIVE, img(R.drawable.ic_menu_googledrive), "Google Drive", handleSelectedCloud)
+                ), selectedCloudId),
                 DrawerItemHeader("Maps"),
                 DrawerItemSpinner(iconExpand, iconCollapse, arrayListOf(
-                        DrawerItemSpinner.Item(ID_GOOGLEEARTH, img(R.drawable.ic_menu_googleearth), "Google Earth", handleItemSelected),
-                        DrawerItemSpinner.Item(ID_GOOGLEMAPS, img(R.drawable.ic_menu_googlemaps), "Google Maps", handleItemSelected),
-                        DrawerItemSpinner.Item(ID_OSMAPS, img(R.drawable.ic_menu_osm), "Open Street Maps", handleItemSelected)
-                )),
+                        DrawerItemSpinner.Item(ID_GOOGLEEARTH, img(R.drawable.ic_menu_googleearth), "Google Earth", handleSelectedMap),
+                        DrawerItemSpinner.Item(ID_GOOGLEMAPS, img(R.drawable.ic_menu_googlemaps), "Google Maps", handleSelectedMap),
+                        DrawerItemSpinner.Item(ID_OSMAPS, img(R.drawable.ic_menu_osm), "Open Street Maps", handleSelectedMap)
+                ), selectedMapId),
                 DrawerItemSeparator(),
-                DrawerItemMedium(ID_HOME, img(R.drawable.ic_menu_home), "Home", handleItemSelected),
-                DrawerItemMedium(ID_SEARCH, img(R.drawable.ic_menu_search), "Search", handleItemSelected),
-                DrawerItemMedium(ID_INBOX, img(R.drawable.ic_menu_inbox), "Inbox", handleItemSelected),
-                DrawerItemMedium(ID_BOOKMARKS, img(R.drawable.ic_menu_bookmarks), "Bookmarks", handleItemSelected),
+                DrawerItemMedium(ID_HOME, img(R.drawable.ic_menu_home), "Home", handleSelected),
+                DrawerItemMedium(ID_SEARCH, img(R.drawable.ic_menu_search), "Search", handleSelected),
+                DrawerItemMedium(ID_INBOX, img(R.drawable.ic_menu_inbox), "Inbox", handleSelected),
+                DrawerItemMedium(ID_BOOKMARKS, img(R.drawable.ic_menu_bookmarks), "Bookmarks", handleSelected),
                 DrawerItemSeparator(),
-                DrawerItemSmall(ID_SETTINGS, img(R.drawable.ic_menu_settings), "Settings", handleItemSelected),
-                DrawerItemSmall(ID_FEEDBACK, img(R.drawable.ic_menu_feedback), "Feedback", handleItemSelected),
-                DrawerItemSmall(ID_ABOUT, img(R.drawable.ic_menu_about), "About", handleItemSelected),
-                DrawerItemSmall(ID_LOGOUT, img(R.drawable.ic_menu_logout), "Logout", handleItemSelected, false)
+                DrawerItemSmall(ID_SETTINGS, img(R.drawable.ic_menu_settings), "Settings", handleSelected),
+                DrawerItemSmall(ID_FEEDBACK, img(R.drawable.ic_menu_feedback), "Feedback", handleSelected),
+                DrawerItemSmall(ID_ABOUT, img(R.drawable.ic_menu_about), "About", handleSelected),
+                DrawerItemSmall(ID_LOGOUT, img(R.drawable.ic_menu_logout), "Logout", handleSelected, false)
         )
         return items
     }
-
 
     override fun onAttach(activity: Activity?) {
         super<Fragment>.onAttach(activity)
@@ -112,29 +141,34 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
         override fun onSingleTapUp(e: MotionEvent): Boolean {
             val view = menu_items.findChildViewUnder(e.getX(), e.getY());
             val adapterPosition = menu_items.getChildAdapterPosition(view);
-            drawerAdapter?.select(drawerAdapter!!.getAdapterItemAt(adapterPosition));
+            drawerAdapter?.select(drawerAdapter!!.getItemIdAt(adapterPosition));
             return super.onSingleTapConfirmed(e);
         }
     }
 
     companion object {
-        public val ID_DROPBOX: Long = 0
-        public val ID_BOX: Long = 1
-        public val ID_ONEDRIVE: Long = 2
-        public val ID_GOOGLEDRIVE: Long = 3
+        private val STATE_SELECTED_ID = "STATE_SELECTED_ID"
+        private val STATE_SELECTED_CLOUD_ID = "STATE_SELECTED_CLOUD_ID"
+        private val STATE_SELECTED_MAP_ID = "STATE_SELECTED_MAP_ID"
+        private var nextId: Long = 0;
 
-        public val ID_GOOGLEEARTH: Long = 4
-        public val ID_GOOGLEMAPS: Long = 5
-        public val ID_OSMAPS: Long = 6
+        public val ID_DROPBOX: Long = ++nextId
+        public val ID_BOX: Long = ++nextId
+        public val ID_ONEDRIVE: Long = ++nextId
+        public val ID_GOOGLEDRIVE: Long = ++nextId
 
-        public val ID_HOME: Long = 7
-        public val ID_SEARCH: Long = 8
-        public val ID_INBOX: Long = 9
-        public val ID_BOOKMARKS: Long = 10
+        public val ID_GOOGLEEARTH: Long = ++nextId
+        public val ID_GOOGLEMAPS: Long = ++nextId
+        public val ID_OSMAPS: Long = ++nextId
 
-        public val ID_SETTINGS: Long = 11
-        public val ID_FEEDBACK: Long = 12
-        public val ID_ABOUT: Long = 13
-        public val ID_LOGOUT: Long = 14
+        public val ID_HOME: Long = ++nextId
+        public val ID_SEARCH: Long = ++nextId
+        public val ID_INBOX: Long = ++nextId
+        public val ID_BOOKMARKS: Long = ++nextId
+
+        public val ID_SETTINGS: Long = ++nextId
+        public val ID_FEEDBACK: Long = ++nextId
+        public val ID_ABOUT: Long = ++nextId
+        public val ID_LOGOUT: Long = ++nextId
     }
 }
