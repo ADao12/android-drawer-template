@@ -1,21 +1,19 @@
 <resources>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="drawer_horizontal_margin">16dp</dimen>
-    <dimen name="drawer_vertical_margin">16dp</dimen>
-
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
 
-    <dimen name="drawer_item_height_medium">48dp</dimen>
-    <dimen name="drawer_item_height_small">24dp</dimen>
-    <dimen name="drawer_item_image_medium">40dp</dimen>
-    <dimen name="drawer_item_image_small">18dp</dimen>
-    <dimen name="drawer_selection_marker_width_medium">8dp</dimen>
-    <dimen name="drawer_selection_marker_width_small">4dp</dimen>
-    <dimen name="drawer_separator">20dp</dimen>
-    <dimen name="drawer_item_margin">8dp</dimen>
+    <dimen name="drawer_item_medium_height">48dp</dimen>
+    <dimen name="drawer_item_small_height">24dp</dimen>
+    <dimen name="drawer_item_medium_size">40dp</dimen>
+    <dimen name="drawer_item_small_size">18dp</dimen>
+    <dimen name="drawer_selection_marker_medium_width">8dp</dimen>
+    <dimen name="drawer_selection_marker_small_width">4dp</dimen>
+    <dimen name="drawer_separator_height">20dp</dimen>
+    <dimen name="drawer_item_smallest_margin">5dp</dimen>
+    <dimen name="drawer_item_small_margin">8dp</dimen>
+    <dimen name="drawer_item_medium_margin">16dp</dimen>
+    <dimen name="drawer_item_large_margin">32dp</dimen>
 
-    <dimen name="medium_text_size">14sp</dimen>
-    <dimen name="small_text_size">8sp</dimen>
+    <dimen name="text_medium_size">14sp</dimen>
+    <dimen name="text_small_size">8sp</dimen>
 </resources>

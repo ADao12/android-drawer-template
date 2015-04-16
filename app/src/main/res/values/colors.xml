@@ -15,11 +15,7 @@
 
     <color name="black">#000</color>
 
-
+    <color name="drawer_item">#ccc</color>
     <color name="drawer_item_active">#565aff</color>
     <color name="drawer_item_pressed">#312e2e</color>
-    <color name="drawer_item_label_color">#000</color>
-
-    <color name="drawer_section_color">#ccc</color>
-
 </resources>

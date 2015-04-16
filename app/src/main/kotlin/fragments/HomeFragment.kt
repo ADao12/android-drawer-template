@@ -33,8 +33,6 @@ public class HomeFragment : Fragment() {
     companion object {
         public fun newInstance(): HomeFragment {
             val fragment = HomeFragment()
-            val args = Bundle()
-            fragment.setArguments(args)
             return fragment
         }
     }

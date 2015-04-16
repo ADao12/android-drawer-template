@@ -21,16 +21,14 @@ import kotlin.properties.Delegates
 import kotlin.reflect.KClass
 
 public class MainActivity : ActionBarActivity(), Observer<Long> {
-    var preferences: SharedPreferences? = null
-        [Inject] set
-
-    var actionBarDrawerToggle: ActionBarDrawerToggle? = null
-
-    var subscription: Subscription? = null
-
-    val drawerContainer by  Delegates.lazy {
+    private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
+    private var subscription: Subscription? = null
+    private val drawerContainer by  Delegates.lazy {
         findViewById(R.id.fragment_drawer)
     }
+
+    var preferences: SharedPreferences? = null
+        [Inject] set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super<ActionBarActivity>.onCreate(savedInstanceState)
@@ -39,16 +37,9 @@ public class MainActivity : ActionBarActivity(), Observer<Long> {
 
         MainApplication.graph.inject(this)
 
-        actionBarDrawerToggle = ActionBarDrawerToggle(this, drawer, toolbar_actionbar as Toolbar, R.string.drawer_open, R.string.drawer_close)
+        initDrawer()
 
-        drawer.setDrawerListener(actionBarDrawerToggle)
-
-        subscription = bindActivity(this, DrawerFragment.itemSelected).subscribe(this);
-
-        // set default drawer item
-        if (savedInstanceState == null) {
-            DrawerFragment.itemSelected.onNext(DrawerFragment.ID_HOME)
-        }
+        setDrawerDefaultItem(savedInstanceState)
     }
 
     override fun onDestroy() {
@@ -59,9 +50,24 @@ public class MainActivity : ActionBarActivity(), Observer<Long> {
     override fun onCompleted() {
     }
 
-    private fun showFragment<A : Fragment>(fragmentTag: KClass<A>, args: Bundle, newInstance: () -> A) {
+    private fun initDrawer() {
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, drawer, toolbar_actionbar as Toolbar,
+                R.string.drawer_open, R.string.drawer_close)
+        drawer.setDrawerListener(actionBarDrawerToggle)
+        subscription = bindActivity(this, DrawerFragment.itemSelected).subscribe(this);
+    }
+
+    private fun setDrawerDefaultItem(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
+            DrawerFragment.itemSelected.onNext(DrawerFragment.ID_HOME)
+        }
+    }
+
+    private fun showFragment<A : Fragment>(fragmentTag: KClass<A>, args: Bundle?, newInstance: () -> A) {
         val fragment = getFragmentManager().findFragmentByTag(fragmentTag.toString()) ?: newInstance()
-        fragment.setArguments(args)
+        if (args != null) {
+            fragment.setArguments(args)
+        }
         getFragmentManager().beginTransaction().replace(R.id.container, fragment, fragmentTag.toString()).commit()
     }
 
@@ -72,15 +78,14 @@ public class MainActivity : ActionBarActivity(), Observer<Long> {
     }
 
     override fun onNext(id: Long) {
-
         when (id) {
             DrawerFragment.ID_HOME -> {
                 closeDrawer()
-                showFragment(HomeFragment::class, Bundle(), { HomeFragment.newInstance() })
+                showFragment(HomeFragment::class, null, { HomeFragment.newInstance() })
             }
             DrawerFragment.ID_ABOUT -> {
                 closeDrawer()
-                showFragment(AboutFragment::class, Bundle(), { AboutFragment.newInstance() })
+                showFragment(AboutFragment::class, null, { AboutFragment.newInstance() })
             }
             else -> Toast.makeText(this, "Drawer item selected id:${id}", Toast.LENGTH_SHORT).show()
         }

@@ -8,18 +8,18 @@
         android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/medium_text_size"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:textColor="@color/drawer_item_label_color" />
+        android:textSize="@dimen/text_medium_size"
+        android:layout_marginTop="@dimen/drawer_item_medium_margin"
+        android:layout_marginLeft="@dimen/drawer_item_medium_margin"
+        android:textColor="@color/black" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginTop="@dimen/drawer_item_smallest_margin"
+        android:layout_marginBottom="@dimen/drawer_item_smallest_margin"
+        android:layout_marginLeft="@dimen/drawer_item_medium_margin"
+        android:layout_marginRight="@dimen/drawer_item_medium_margin"
         android:background="@color/drawer_item_active" />
 
 </LinearLayout>

@@ -9,6 +9,10 @@ import com.michalfaber.drawertemplate.views.adapters.AdapterItemsSupervisor
 import com.michalfaber.drawertemplate.views.adapters.ViewHolderProvider
 import javax.inject.Inject
 
+/**
+ *  Adapter handles multiple view types. Type of view is determined by the hashCode of the specific ViewHolder class
+ *
+ */
 public class DrawerAdapter(val adapterItems: List<AdapterItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), AdapterItemsSupervisor<AdapterItem> {
     private val items: MutableList<AdapterItem> = adapterItems.toCollection(arrayListOf<AdapterItem>())
     private var selectedId: Long? = null
@@ -17,7 +21,12 @@ public class DrawerAdapter(val adapterItems: List<AdapterItem>) : RecyclerView.A
         [Inject] set
 
     init {
+        // TODO: Create separate component
         MainApplication.graph.inject(this)
+
+        /*
+            Register functions which will be used to create fresh instances of specific View Holder and layout
+         */
 
         viewHolderProvider!!.registerViewHolderFactory(ViewHolderMedium::class, R.layout.drawer_item_medium, { drawerItemView ->
             ViewHolderMedium(drawerItemView)

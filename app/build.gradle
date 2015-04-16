@@ -27,10 +27,10 @@ dependencies {
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.android.support:recyclerview-v7:22.0.0'
 
-    //kotlin dependency
+    // Kotlin dependency
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    //Dagger 2 dependencies
+    // Dagger 2 dependencies
     compile ('com.google.dagger:dagger:2.0') {
         exclude module: 'javax.inject'
     }

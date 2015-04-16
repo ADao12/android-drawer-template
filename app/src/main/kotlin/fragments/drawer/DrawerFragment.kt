@@ -17,7 +17,7 @@ import rx.subjects.PublishSubject
 public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
     private var gestureDetector: GestureDetectorCompat? = null
     private var drawerAdapter: DrawerAdapter? = null
-    private var items: List<AdapterItem>? = null
+    private var drawerItems: List<AdapterItem>? = null
 
     private var selectedId: Long = ID_HOME
     private var selectedCloudId: Long = ID_DROPBOX
@@ -64,8 +64,8 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
         super<Fragment>.onViewCreated(view, savedInstanceState)
 
         // set adapter
-        items = getDrawerItems()
-        drawerAdapter = DrawerAdapter(items!!)
+        drawerItems = createDrawerItems()
+        drawerAdapter = DrawerAdapter(drawerItems!!)
         drawerAdapter!!.select(selectedId)
         menu_items.setAdapter(drawerAdapter)
 
@@ -83,7 +83,7 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
         return ResourcesCompat.getDrawable(getActivity().getResources(), id, null)
     }
 
-    public fun getDrawerItems(): List<AdapterItem> {
+    public fun createDrawerItems(): List<AdapterItem> {
         val iconExpand = img(R.drawable.ic_expand_arrow)
         val iconCollapse = img(R.drawable.ic_collapse_arrow)
 

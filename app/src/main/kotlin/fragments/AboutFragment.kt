@@ -15,8 +15,6 @@ public class AboutFragment : Fragment() {
     companion object {
         public fun newInstance(): AboutFragment {
             val fragment = AboutFragment()
-            val args = Bundle()
-            fragment.setArguments(args)
             return fragment
         }
     }

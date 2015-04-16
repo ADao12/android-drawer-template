@@ -8,7 +8,7 @@ abstract class AdapterItemBase<T>(val viewHolderClass: KClass<T>) : AdapterItem 
         val ID_GENERATOR_MIN_VALUE: Long = 2 shl 5
         var nextId: Long = ID_GENERATOR_MIN_VALUE;
     }
-
+    // if not overriden the id is generated
     override val id = ++nextId
     override val viewType: Int = viewHolderClass.hashCode()
 
