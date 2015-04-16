@@ -1,7 +1,5 @@
 package com.michalfaber.drawertemplate
 
-import android.location.LocationManager
-import javax.inject.Inject
 import kotlin.platform.platformStatic
 import kotlin.properties.Delegates
 

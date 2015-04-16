@@ -1,26 +1,15 @@
 package com.michalfaber.drawertemplate.views.adapters.drawer
 
-import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import com.michalfaber.drawertemplate.MainApplication
 import com.michalfaber.drawertemplate.R
 import com.michalfaber.drawertemplate.views.adapters.AdapterItem
 import com.michalfaber.drawertemplate.views.adapters.AdapterItemsSupervisor
 import com.michalfaber.drawertemplate.views.adapters.ViewHolderProvider
-import java.util.ArrayList
-import java.util.HashMap
 import javax.inject.Inject
-import kotlin.properties.Delegates
-import kotlin.reflect.KClass
 
-public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), AdapterItemsSupervisor<AdapterItem> {
+public class DrawerAdapter(val adapterItems: List<AdapterItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), AdapterItemsSupervisor<AdapterItem> {
     private val items: MutableList<AdapterItem> = adapterItems.toCollection(arrayListOf<AdapterItem>())
     private var selectedId: Long? = null
 
@@ -55,8 +44,8 @@ public class DrawerAdapter(val adapterItems : List<AdapterItem>) : RecyclerView.
         })
     }
 
-    public fun getItemIdAt(adapterPosition: Int) : Long {
-        if (adapterPosition >=0 && adapterPosition < items.size()) {
+    public fun getItemIdAt(adapterPosition: Int): Long {
+        if (adapterPosition >= 0 && adapterPosition < items.size()) {
             return items[adapterPosition].id
         } else {
             throw IllegalArgumentException()

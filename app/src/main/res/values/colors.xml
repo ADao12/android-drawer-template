@@ -8,12 +8,13 @@
     -->
     <color name="primary">#d5d5d5</color>
     <color name="primary_dark">#6d6d6d</color>
-    <color name="window_background">#6d6d6d</color>
+    <color name="window_background">#d9d9d9</color>
     <color name="text_primary">#212121</color>
     <color name="navigation_bar">#6d6d6d</color>
     <color name="accent">#565aff</color>
 
     <color name="black">#000</color>
+
 
     <color name="drawer_item_active">#565aff</color>
     <color name="drawer_item_pressed">#312e2e</color>

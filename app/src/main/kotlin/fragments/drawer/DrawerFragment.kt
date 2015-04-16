@@ -1,4 +1,4 @@
-package fragments.drawer
+package com.michalfaber.drawertemplate.fragments.drawer
 
 import android.app.Fragment
 import android.graphics.drawable.Drawable
@@ -13,7 +13,6 @@ import com.michalfaber.drawertemplate.views.adapters.AdapterItem
 import com.michalfaber.drawertemplate.views.adapters.drawer.*
 import kotlinx.android.synthetic.fragment_drawer.menu_items
 import rx.subjects.PublishSubject
-import java.util.ArrayList
 
 public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
     private var gestureDetector: GestureDetectorCompat? = null
@@ -88,7 +87,7 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
         val iconExpand = img(R.drawable.ic_expand_arrow)
         val iconCollapse = img(R.drawable.ic_collapse_arrow)
 
-        val items: ArrayList<AdapterItem> = arrayListOf(
+        val items: List<AdapterItem> = arrayListOf(
                 DrawerItemHeader("Cloud"),
                 DrawerItemSpinner(iconExpand, iconCollapse, arrayListOf(
                         DrawerItemSpinner.Item(ID_DROPBOX, img(R.drawable.ic_menu_dropbox), "Dropbox", handleSelectedCloud),
@@ -164,6 +163,6 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
         public val ID_LOGOUT: Long = ++nextId
 
         // emits ids of selected drawer items
-        public val itemSelected : PublishSubject<Long> = PublishSubject.create()
+        public val itemSelected: PublishSubject<Long> = PublishSubject.create()
     }
 }

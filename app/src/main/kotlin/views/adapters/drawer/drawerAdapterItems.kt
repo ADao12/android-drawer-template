@@ -1,11 +1,6 @@
 package com.michalfaber.drawertemplate.views.adapters.drawer
 
-import android.content.Context
-import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.support.v4.content.res.ResourcesCompat
-import com.michalfaber.drawertemplate.MainApplication
-import com.michalfaber.drawertemplate.R
 import com.michalfaber.drawertemplate.views.adapters.AdapterItemBase
 
 class DrawerItemMedium(override val id: Long, val icon: Drawable, val label: String, val onClick: (Long) -> Unit, override val selectable: Boolean = true) : AdapterItemBase<ViewHolderMedium>(ViewHolderMedium::class) {
@@ -53,9 +48,9 @@ class DrawerItemSpinner(val iconExpand: Drawable, val iconCollapse: Drawable, va
         subItems.filter { it.id == selectedId }
                 .take(1)
                 .forEach {
-            viewHolder.icon.setImageDrawable(it.icon)
-            viewHolder.label.setText(it.label)
-        }
+                    viewHolder.icon.setImageDrawable(it.icon)
+                    viewHolder.label.setText(it.label)
+                }
 
         viewHolder.itemView.setOnClickListener({
 
