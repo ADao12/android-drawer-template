@@ -1,6 +1,5 @@
-package com.michalfaber.drawertemplate.fragments
+package fragments.drawer
 
-import android.app.Activity
 import android.app.Fragment
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -165,6 +164,6 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
         public val ID_LOGOUT: Long = ++nextId
 
         // emits ids of selected drawer items
-        public val itemSelected : PublishSubject<Long> =  PublishSubject.create()
+        public val itemSelected : PublishSubject<Long> = PublishSubject.create()
     }
 }
