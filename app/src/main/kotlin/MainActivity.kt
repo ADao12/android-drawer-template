@@ -20,15 +20,20 @@ import android.widget.Toast
 import com.michalfaber.drawertemplate.fragments.DrawerFragment
 
 import kotlinx.android.synthetic.activity_main.*
+import rx.Observable
+import rx.Observer
+import rx.Subscription
 import javax.inject.Inject
 import kotlin.properties.Delegates
+import rx.android.app.AppObservable.bindActivity;
 
-public class MainActivity : ActionBarActivity(), DrawerFragment.DrawerListener {
-
+public class MainActivity : ActionBarActivity(), Observer<Long> {
     var preferences: SharedPreferences? = null
         [Inject] set
 
     var actionBarDrawerToggle: ActionBarDrawerToggle? = null
+
+    var subscription: Subscription? = null
 
     val drawerContainer by  Delegates.lazy {
         findViewById(R.id.fragment_drawer)
@@ -37,11 +42,11 @@ public class MainActivity : ActionBarActivity(), DrawerFragment.DrawerListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super<ActionBarActivity>.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar_actionbar)
+        setSupportActionBar(toolbar_actionbar as Toolbar)
 
         MainApplication.graph.inject(this)
 
-        actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawer, toolbar_actionbar, R.string.drawer_open, R.string.drawer_close) {
+        actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawer, toolbar_actionbar as Toolbar, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
                 //getActionBar().setTitle(getTitle());
@@ -55,14 +60,34 @@ public class MainActivity : ActionBarActivity(), DrawerFragment.DrawerListener {
             }
         }
 
-        drawer.setDrawerListener(actionBarDrawerToggle)
+    drawer.setDrawerListener(actionBarDrawerToggle)
+
+    subscription = bindActivity(this, DrawerFragment.itemSelected).subscribe(this);
+}
+
+    override fun onDestroy() {
+        subscription?.unsubscribe();
+        super<ActionBarActivity>.onDestroy()
     }
 
-    override public fun onDrawerItemSelected(id: Long) {
+    override fun onCompleted() {
+    }
+
+    override fun onNext(id: Long) {
         when (id) {
-            DrawerFragment.ID_ABOUT -> Toast.makeText(this, "About", Toast.LENGTH_SHORT).show()
+            DrawerFragment.ID_HOME -> {
+                drawer.closeDrawer(drawerContainer)
+                Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show()
+            }
+            DrawerFragment.ID_ABOUT -> {
+                drawer.closeDrawer(drawerContainer)
+                Toast.makeText(this, "About", Toast.LENGTH_SHORT).show()
+            }
             else -> Toast.makeText(this, "Menu item selected id:${id}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onError(e: Throwable?) {
     }
 
     override fun onBackPressed() {

@@ -1,6 +1,6 @@
 buildscript {
-    //ext.kotlinVersion = '0.11.91'
-    ext.kotlinVersion = '0.1-SNAPSHOT'
+    ext.kotlinVersion = '0.11.91.1'
+    //ext.kotlinVersion = '0.1-SNAPSHOT'
 
     repositories {
         mavenLocal()
@@ -37,8 +37,8 @@ dependencies {
     apt ('com.google.dagger:dagger-compiler:2.0')
     provided 'javax.annotation:jsr250-api:1.0'
 
-    // RxKotlin
-    //compile 'io.reactivex:rxkotlin:0.21.0'
+    // RxJava
+    compile 'io.reactivex:rxandroid:0.24.0'
 }
 
 android {

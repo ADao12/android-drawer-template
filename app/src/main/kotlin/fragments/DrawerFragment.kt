@@ -13,11 +13,10 @@ import com.michalfaber.drawertemplate.R
 import com.michalfaber.drawertemplate.views.adapters.AdapterItem
 import com.michalfaber.drawertemplate.views.adapters.drawer.*
 import kotlinx.android.synthetic.fragment_drawer.menu_items
+import rx.subjects.PublishSubject
 import java.util.ArrayList
 
-
 public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
-    private var listener: DrawerListener? = null
     private var gestureDetector: GestureDetectorCompat? = null
     private var drawerAdapter: DrawerAdapter? = null
     private var items: List<AdapterItem>? = null
@@ -28,36 +27,35 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
 
     private val handleSelected: (Long) -> Unit = { id ->
         selectedId = id
-        listener?.onDrawerItemSelected(id)
+        itemSelected.onNext(id)
     }
+
     private val handleSelectedCloud: (Long) -> Unit = { id ->
         selectedCloudId = id
-        listener?.onDrawerItemSelected(id)
+        itemSelected.onNext(id)
     }
 
     private val handleSelectedMap: (Long) -> Unit = { id ->
         selectedMapId = id
-        listener?.onDrawerItemSelected(id)
+        itemSelected.onNext(id)
     }
 
-    trait DrawerListener {
-        public fun onDrawerItemSelected(id: Long)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super<Fragment>.onCreate(savedInstanceState)
+
+        if (savedInstanceState != null) {
+            selectedId = savedInstanceState.getLong(STATE_SELECTED_ID);
+            selectedCloudId = savedInstanceState.getLong(STATE_SELECTED_CLOUD_ID);
+            selectedMapId = savedInstanceState.getLong(STATE_SELECTED_MAP_ID);
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putLong(STATE_SELECTED_ID, selectedId);
         outState.putLong(STATE_SELECTED_CLOUD_ID, selectedCloudId);
         outState.putLong(STATE_SELECTED_MAP_ID, selectedMapId);
-        super<Fragment>.onSaveInstanceState(outState)
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super<Fragment>.onCreate(savedInstanceState)
-        if (savedInstanceState != null) {
-            selectedId = savedInstanceState.getLong(STATE_SELECTED_ID);
-            selectedCloudId = savedInstanceState.getLong(STATE_SELECTED_CLOUD_ID);
-            selectedMapId = savedInstanceState.getLong(STATE_SELECTED_MAP_ID);
-        }
+        super<Fragment>.onSaveInstanceState(outState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -66,20 +64,24 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super<Fragment>.onViewCreated(view, savedInstanceState)
-        val layoutManager = LinearLayoutManager(getActivity())
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL)
 
+        // set adapter
         items = getDrawerItems()
         drawerAdapter = DrawerAdapter(items!!)
-        menu_items.setLayoutManager(layoutManager)
-        menu_items.setHasFixedSize(true)
+        drawerAdapter!!.select(selectedId)
         menu_items.setAdapter(drawerAdapter)
+
+        // set layout manager
+        val layoutManager = LinearLayoutManager(getActivity())
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL)
+        menu_items.setLayoutManager(layoutManager)
+
+        menu_items.setHasFixedSize(true)
         menu_items.addOnItemTouchListener(this)
-        drawerAdapter?.select(selectedId)
         gestureDetector = GestureDetectorCompat(getActivity(), DrawerRecyclerViewOnGestureListener());
     }
 
-    private inline fun img(id: Int): Drawable {
+    private fun img(id: Int): Drawable {
         return ResourcesCompat.getDrawable(getActivity().getResources(), id, null)
     }
 
@@ -115,20 +117,6 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
         return items
     }
 
-    override fun onAttach(activity: Activity?) {
-        super<Fragment>.onAttach(activity)
-        try {
-            listener = activity as DrawerListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("Activity must implement NavigationDrawerCallbacks.")
-        }
-    }
-
-    override fun onDetach() {
-        super<Fragment>.onDetach()
-        listener = null
-    }
-
     override fun onTouchEvent(rv: RecyclerView?, e: MotionEvent?) {
     }
 
@@ -139,9 +127,14 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
 
     inner class DrawerRecyclerViewOnGestureListener : GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapUp(e: MotionEvent): Boolean {
+
+            // get the position of touched item
             val view = menu_items.findChildViewUnder(e.getX(), e.getY());
             val adapterPosition = menu_items.getChildAdapterPosition(view);
+
+            // set this item as selected
             drawerAdapter?.select(drawerAdapter!!.getItemIdAt(adapterPosition));
+
             return super.onSingleTapConfirmed(e);
         }
     }
@@ -170,5 +163,8 @@ public class DrawerFragment : Fragment(), RecyclerView.OnItemTouchListener {
         public val ID_FEEDBACK: Long = ++nextId
         public val ID_ABOUT: Long = ++nextId
         public val ID_LOGOUT: Long = ++nextId
+
+        // emits ids of selected drawer items
+        public val itemSelected : PublishSubject<Long> =  PublishSubject.create()
     }
 }
